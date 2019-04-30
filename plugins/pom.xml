@@ -7,7 +7,7 @@
     <packaging>pom</packaging>
     <name>Openfire Plugins</name>
 
-    <description>Aggregate project for Openfire plugins.</description>
+    <description>Parent POM for Openfire plugins.</description>
     <url>http://www.igniterealtime.org/projects/openfire/</url>
 
     <inceptionYear>2003</inceptionYear>
@@ -269,9 +269,29 @@
                     <fail>true</fail>
                 </configuration>
             </plugin>
+            <!--
+            The various MINA dependencies rely on OSGi bundle artifacts rather than standard JAR files.
+            As such, it's necessary to add support for these bundle to Maven using the Apache Felix maven-bundle-plugin.
+            See https://stackoverflow.com/a/5409602 for a good explanation of OSGi bundles, with links to more info.
+            -->
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>4.2.0</version>
+                <extensions>true</extensions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/*_jsp.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -324,6 +344,7 @@
                                 </jspc>
                                 <sourceVersion>1.8</sourceVersion>
                                 <targetVersion>1.8</targetVersion>
+                                <keepSources>true</keepSources>
                             </configuration>
                         </execution>
                     </executions>
